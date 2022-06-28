@@ -58,7 +58,7 @@ fun BookDetails(
                     model = book.value?.imageUrl,
                     contentDescription = stringResource(id = R.string.book_cover_image),
                     modifier = Modifier
-                        .size(256.dp)
+                        .size(128.dp)
                         .clip(RoundedCornerShape(8.dp))
                         .align(CenterHorizontally)
                         .padding(8.dp)

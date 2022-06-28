@@ -12,6 +12,9 @@ interface BookDao {
     @Query("SELECT * FROM book")
     fun observePagedBooks(): PagingSource<Int, Book>
 
+    @Query("SELECT * FROM book WHERE author LIKE :search OR title LIKE :search ")
+    fun observePagedBooksFilteredByAuthorOrTitle(search: String) : PagingSource<Int, Book>
+
     @Query("SELECT * FROM book WHERE id = :id")
     fun getBookById(id: Long): Flow<Book>
 

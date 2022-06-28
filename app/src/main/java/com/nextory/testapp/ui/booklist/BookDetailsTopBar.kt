@@ -5,11 +5,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.twotone.Star
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.nextory.testapp.R
 import com.nextory.testapp.data.Book
@@ -43,10 +44,10 @@ fun BookDetailsTopBar(
                 updateFavorite.invoke(book)
             }) {
                 Icon(
-                    painter = if (book.favorite) {
-                        painterResource(id = R.drawable.ic_checked_favorite_star)
+                    imageVector = if (book.favorite) {
+                        Icons.Filled.Star
                     } else {
-                        painterResource(id = R.drawable.ic_unchecked_favorite_star)
+                        Icons.TwoTone.Star
                     },
                     contentDescription = stringResource(id = R.string.favorite)
                 )

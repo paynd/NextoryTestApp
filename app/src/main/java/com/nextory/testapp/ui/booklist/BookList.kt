@@ -10,6 +10,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -18,7 +19,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -48,6 +48,7 @@ fun BookList(
     BookList(
         pagedBooks = pagedBooks,
         onSearchTextChanged = {
+            bookListViewModel.updateSearch(it)
         },
         onComposeClick = { book ->
             navigator.navigate(BookDetailsDestination(book.id))
@@ -91,7 +92,10 @@ private fun BookList(
                     },
                     trailingIcon = {
                         AnimatedVisibility(visible = searchText.isNotEmpty()) {
-                            IconButton(onClick = { searchText = "" }) {
+                            IconButton(onClick = {
+                                searchText = ""
+                                onSearchTextChanged("") //todo: check why not recomposing on empty by default
+                            }) {
                                 Icon(
                                     imageVector = Icons.Filled.Close,
                                     contentDescription = null
@@ -152,7 +156,7 @@ private fun BookItem(
             Text(book.title)
             if (book.favorite) {
                 Icon(
-                    painterResource(id = R.drawable.ic_checked_favorite_star),
+                    imageVector = Icons.Filled.Star,
                     contentDescription = stringResource(id = R.string.favorite),
                 )
             }

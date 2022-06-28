@@ -9,9 +9,13 @@ import javax.inject.Inject
 class BookRepository @Inject constructor(
     private val bookDao: BookDao
 ) {
-    fun observePagedBooks(pagingConfig: PagingConfig): Flow<PagingData<Book>> {
+    fun observePagedBooks(search: String, pagingConfig: PagingConfig): Flow<PagingData<Book>> {
         return Pager(config = pagingConfig) {
-            bookDao.observePagedBooks()
+            if (search.isEmpty()) {
+                bookDao.observePagedBooks()
+            } else {
+                bookDao.observePagedBooksFilteredByAuthorOrTitle("%$search%")
+            }
         }.flow
     }
 
