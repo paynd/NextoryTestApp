@@ -1,5 +1,6 @@
 package com.nextory.testapp.data
 
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 
@@ -7,7 +8,10 @@ import androidx.room.RoomDatabase
     entities = [
         Book::class
     ],
-    version = 1
+    version = 2,
+    autoMigrations = [
+        AutoMigration(from = 1, to = 2)
+    ]
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun bookDao(): BookDao

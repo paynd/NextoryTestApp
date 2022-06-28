@@ -14,4 +14,6 @@ class BookRepository @Inject constructor(
             bookDao.observePagedBooks()
         }.flow
     }
+
+    fun getBook(id: Long) = bookDao.getBookById(id)
 }
