@@ -18,6 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -29,10 +30,17 @@ import coil.compose.AsyncImage
 import com.nextory.testapp.R
 import com.nextory.testapp.data.Book
 import com.nextory.testapp.ui.components.ListItem
+import com.nextory.testapp.ui.destinations.BookDetailsDestination
 import com.nextory.testapp.ui.utils.rememberFlowWithLifecycle
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootNavGraph
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
+@RootNavGraph(start = true)
+@Destination
 @Composable
 fun BookList(
+    navigator: DestinationsNavigator,
     bookListViewModel: BookListViewModel = hiltViewModel()
 ) {
     val pagedBooks = rememberFlowWithLifecycle(bookListViewModel.pagedBooks)
@@ -40,6 +48,9 @@ fun BookList(
     BookList(
         pagedBooks = pagedBooks,
         onSearchTextChanged = {
+        },
+        onComposeClick = { book ->
+            navigator.navigate(BookDetailsDestination(book.id))
         }
     )
 }
@@ -52,7 +63,8 @@ fun BookList(
 @Composable
 private fun BookList(
     pagedBooks: LazyPagingItems<Book>,
-    onSearchTextChanged: (String) -> Unit = {}
+    onSearchTextChanged: (String) -> Unit = {},
+    onComposeClick: (book: Book) -> Unit
 ) {
     Scaffold(topBar = { BookListTopBar() }) { paddingValues ->
         LazyColumn(
@@ -98,7 +110,7 @@ private fun BookList(
             }
 
             items(pagedBooks) { book ->
-                BookItem(book = book!!)
+                BookItem(book = book!!, onComposeClick = onComposeClick)
             }
         }
     }
@@ -117,9 +129,14 @@ private fun BookListTopBar() {
 }
 
 @Composable
-private fun BookItem(book: Book) {
+private fun BookItem(
+    book: Book,
+    onComposeClick: (book: Book) -> Unit
+) {
     ListItem(
-        modifier = Modifier.clickable { },
+        modifier = Modifier.clickable {
+            onComposeClick.invoke(book)
+        },
         icon = {
             AsyncImage(
                 model = book.imageUrl,
@@ -131,6 +148,14 @@ private fun BookItem(book: Book) {
         },
         secondaryText = { Text(book.author) }
     ) {
-        Text(book.title)
+        Row(Modifier.fillMaxWidth()) {
+            Text(book.title)
+            if (book.favorite) {
+                Icon(
+                    painterResource(id = R.drawable.ic_checked_favorite_star),
+                    contentDescription = stringResource(id = R.string.favorite),
+                )
+            }
+        }
     }
 }

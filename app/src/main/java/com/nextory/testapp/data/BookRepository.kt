@@ -16,4 +16,6 @@ class BookRepository @Inject constructor(
     }
 
     fun getBook(id: Long) = bookDao.getBookById(id)
+
+    fun toggleBookFavorite(book: Book) = bookDao.updateBook(book.copy(favorite = !book.favorite))
 }
